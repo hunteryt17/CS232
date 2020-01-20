@@ -88,8 +88,8 @@ def problem1():
     #your code here
     url_orig = make_query('one', 'hunterythompson', '')
     print(url_orig)
-    url_split0 = url_orig.split('&')
-    md5dig= url_split0[0].split('=')[1]
+    url_split0 = url_orig.split(b'&')
+    md5dig= url_split0[0].split(b'=')[1]
     print(md5dig)
     print(url_split0[1] + '&' + url_split0[2])
     return flag
