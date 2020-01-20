@@ -83,10 +83,15 @@ def modexp(base, exp, modulus):
 # PROBLEM 1 SOLUTION
 ################################################################################
 
-def problem1():
+def problem1(str):
     flag = ""
     #your code here
-    print(make_query('one', 'hunterythompson', b'http://www.flickur.com/?api_tag=cdef8f22af8db736a47c18b988823e3f&uname=hunterythompson&role=user'))
+    url_orig = make_query('one', 'hunterythompson', b'')
+    print(url_orig)
+    url_split0 = url_orig.split('&')
+    md5dig= url_split0[0].split('=')[1]
+    print(md5dig)
+    print(url_split0[1] + '&' + url_split0[2])
     return flag
 
 
