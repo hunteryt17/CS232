@@ -91,7 +91,7 @@ def problem1():
     url_split0 = url_orig.split(b'&')
     md5dig= url_split0[0].split(b'=')[1]
     print(md5dig)
-    print(url_split0[1] + '&' + url_split0[2])
+    print(url_split0[1] + b'&' + url_split0[2])
     return flag
 
 
