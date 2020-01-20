@@ -94,9 +94,10 @@ def problem1():
     num_blocks = num_bits // 128
     num_bits_orig = num_blocks * 512
     str0= url_split0[1] + b'&' + url_split0[2]
+
     print(num_bits)
     print(num_blocks)
-    print(sec_size0)
+
     return flag
 
 
