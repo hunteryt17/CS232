@@ -86,7 +86,7 @@ def modexp(base, exp, modulus):
 def problem1():
     flag = ""
     #your code here
-    url_orig = make_query('one', 'hunterythompson', b'')
+    url_orig = make_query('one', 'hunterythompson', '')
     print(url_orig)
     url_split0 = url_orig.split('&')
     md5dig= url_split0[0].split('=')[1]
