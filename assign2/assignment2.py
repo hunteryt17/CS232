@@ -98,7 +98,7 @@ def problem1(admin_str):
 
     print(num_bits)
     print(num_blocks)
-    h = md5(state=bytes.fromhex(md5dig), count=num_bits_orig)
+    h = md5(state=md5dig, count=num_bits_orig)
     md5dig_admin= h.update(admin_str)
     print(md5dig_admin)
     url_new = md5dig[0]+ b'=' + h.hexdigest() + str0 + admin_str
