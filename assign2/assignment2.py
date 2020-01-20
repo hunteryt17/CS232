@@ -103,7 +103,7 @@ def problem1(admin_str):
     h = md5(state=md5dig, count=num_bits_orig)
     md5dig_admin= h.update(admin_str)
     print(h.hexdigest())
-    url_new = url_split1[0] + b'=' + h.hexdigest() + str0 + padding0 + admin_str
+    url_new = url_split1[0] + b'=' + h.hexdigest()# + str0 + padding0 + admin_str
     print(padding0)
     print(url_new)
     return flag
