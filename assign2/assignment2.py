@@ -86,7 +86,7 @@ def modexp(base, exp, modulus):
 def problem1():
     flag = ""
     #your code here
-    print(make_query('one', 'hunterythompson', b""))
+    print(make_query('one', 'hunterythompson', b'http://www.flickur.com/?api_tag=cdef8f22af8db736a47c18b988823e3f&uname=hunterythompson&role=user'))
     return flag
 
 
