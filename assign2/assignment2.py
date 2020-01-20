@@ -95,7 +95,7 @@ def problem1(admin_str):
     num_blocks = num_bits // 128
     num_bits_orig = num_blocks * 512
     str0= url_split0[1] + b'&' + url_split0[2]
-    padding = padding(len(str0)*8)
+    padding0 = padding(len(str0)*8)
 
     print(num_bits)
     print(num_blocks)
@@ -103,6 +103,7 @@ def problem1(admin_str):
     md5dig_admin= h.update(admin_str)
     print(h.hexdigest())
     url_new = md5dig[0] + b'=' #+ h.hexdigest() + str0 + admin_str
+    print(padding0)
     print(url_new)
     return flag
 
