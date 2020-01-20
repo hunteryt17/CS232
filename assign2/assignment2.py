@@ -102,7 +102,7 @@ def problem1(admin_str):
     md5dig_admin= h.update(admin_str)
     print(md5dig_admin)
     #url_new = md5dig[0]+ b'=' #+ h.hexdigest() + str0 + admin_str
-    print(url_new)
+    #print(url_new)
     return flag
 
 
