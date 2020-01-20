@@ -92,7 +92,9 @@ def problem1():
     md5dig= url_split0[0].split(b'=')[1]
     num_bits = len(md5dig) * 8
     num_blocks = num_bits / 128
-    str1= url_split0[1] + b'&' + url_split0[2]
+    str0= url_split0[1] + b'&' + url_split0[2]
+    sec_size0 = num_bits - len(str0)*8
+    print(sec_size0)
     return flag
 
 
