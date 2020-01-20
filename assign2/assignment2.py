@@ -83,7 +83,7 @@ def modexp(base, exp, modulus):
 # PROBLEM 1 SOLUTION
 ################################################################################
 
-def problem1():
+def problem1(admin_str):
     flag = ""
     #your code here
     url_orig = make_query('one', 'hunterythompson', '')
@@ -97,7 +97,11 @@ def problem1():
 
     print(num_bits)
     print(num_blocks)
-
+    h = md5(state=bytes.fromhex(md5dig), count=num_bits_orig)
+    md5dig_admin= h.update(admin_str)
+    print(md5dig_admin)
+    url_new = md5dig[0]+ b'=' + h.hexdigest() + str0 + admin_str
+    print(url_new)
     return flag
 
 
