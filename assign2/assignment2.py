@@ -106,6 +106,7 @@ def problem1(admin_str):
     url_new = url_split1[0] + b'=' + bytes.fromhex(n_hash) + str0 + padding0 + admin_str
     print(padding0)
     print(url_new)
+    print(make_query('one', 'hunterythompson', url_new))
     return flag
 
 
