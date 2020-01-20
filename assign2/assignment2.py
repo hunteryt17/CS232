@@ -124,7 +124,7 @@ def problem5():
 # use this for testing by uncommenting the lines for problems you wish to test
 if __name__ == "__main__":
     #print("Problem 0 flag:", problem0())
-    #print("Problem 1 flag:", problem1())
+    print("Problem 1 flag:", problem1())
     #print("Problem 2 flag:", problem2())
     #print("Problem 3 flag:", problem3())
     #print("Problem 4 flag:", problem4())
