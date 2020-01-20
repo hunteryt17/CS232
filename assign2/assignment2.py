@@ -90,7 +90,8 @@ def problem1(admin_str):
     url_orig = make_query('one', 'hunterythompson', '')
     print(url_orig)
     url_split0 = url_orig.split(b'&')
-    md5dig= url_split0[0].split(b'=')[1]
+    url_split1= url_split0.split(b'='')
+    md5dig= url_split1[1]
     num_bits = len(md5dig) * 8
     num_blocks = num_bits // 128
     num_bits_orig = num_blocks * 512
@@ -102,7 +103,7 @@ def problem1(admin_str):
     h = md5(state=md5dig, count=num_bits_orig)
     md5dig_admin= h.update(admin_str)
     print(h.hexdigest())
-    url_new = md5dig[0] + b'=' #+ h.hexdigest() + str0 + admin_str
+    url_new = url_split1[0] + b'=' #+ h.hexdigest() + str0 + admin_str
     print(padding0)
     print(url_new)
     return flag
