@@ -2,13 +2,13 @@ import urllib.request
 import base64
 
 ################################################################################
-# 
+#
 # This starter file for UChicago CMSC 23200 / 33250 is for Python3
 #
 ################################################################################
 
 ################################################################################
-# 
+#
 # make_query(task, cnet_id, query)
 # -- task should be one of 'one','two','three','four','five'
 # -- cnet_id should always be your own cnet_id
@@ -20,7 +20,7 @@ def make_query(task, cnet_id, query):
     DEBUG = False; # Replace with "True" to print extra debugging information
     task = task.lower()
     cnet_id = cnet_id.lower()
-    if DEBUG: 
+    if DEBUG:
         print("Querying the server")
         print("(Task:", task, ")")
         print("(CNET ID:", cnet_id, ")")
@@ -86,6 +86,7 @@ def modexp(base, exp, modulus):
 def problem1():
     flag = ""
     #your code here
+    print(make_query('one', hunterythompson, b"uname=hunterythompson&role=user"))
     return flag
 
 
