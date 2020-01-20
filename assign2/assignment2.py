@@ -83,7 +83,7 @@ def modexp(base, exp, modulus):
 # PROBLEM 1 SOLUTION
 ################################################################################
 
-def problem1(str):
+def problem1():
     flag = ""
     #your code here
     url_orig = make_query('one', 'hunterythompson', b'')
