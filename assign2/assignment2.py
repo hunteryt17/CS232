@@ -90,7 +90,7 @@ def problem1(admin_str):
     url_orig = make_query('one', 'hunterythompson', '')
     print(url_orig)
     url_split0 = url_orig.split(b'&')
-    url_split1= url_split0.split(b'=')
+    url_split1= url_split0[0].split(b'=')
     md5dig= url_split1[1]
     num_bits = len(md5dig) * 8
     num_blocks = num_bits // 128
