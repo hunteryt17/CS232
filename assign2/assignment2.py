@@ -95,7 +95,7 @@ def problem1(admin_str):
     num_bits = len(md5dig) * 8
     num_blocks = num_bits // 128
     num_bits_orig = num_blocks * 512
-    str0= url_split0[1] + b'&' + url_split0[2]
+    str0= url_split0[1] + '&' + url_split0[2]
     print(str0)
 
     print(num_bits)
@@ -106,11 +106,11 @@ def problem1(admin_str):
 
     for s in range(1, 65):
         padding0 = padding((len(str0)+s)*8)
-        url_new = url_split1[0] + b'=' + bytes.fromhex(n_hash) + str0 + padding0 + admin_str
+        url_new = url_split1[0] + '=' + n_hash + str0 + padding0 + admin_str
         if s == 34:
             print(padding0)
             print(url_new)
-            print(url_new.decode("utf-8"))
+            #print(url_new.decode("utf-8"))
         try:
             print(make_query('one', 'hunterythompson', url_new))
             return make_query('one', 'hunterythompson', url_new)
