@@ -110,7 +110,7 @@ def problem1(admin_str):
         try:
             print(make_query('one', 'hunterythompson', url_new))
             break
-    return flag
+    return make_query('one', 'hunterythompson', url_new)
 
 
 ################################################################################
