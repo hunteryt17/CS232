@@ -111,7 +111,9 @@ def problem1(admin_str):
         try:
             print(make_query('one', 'hunterythompson', url_new))
             return make_query('one', 'hunterythompson', url_new)
-    
+        except:
+            continue
+
     return
 
 
