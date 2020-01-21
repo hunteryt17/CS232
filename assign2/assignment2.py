@@ -96,17 +96,20 @@ def problem1(admin_str):
     num_blocks = num_bits // 128
     num_bits_orig = num_blocks * 512
     str0= url_split0[1] + b'&' + url_split0[2]
-    padding0 = padding(len(str0)*8)
 
     print(num_bits)
     print(num_blocks)
     h = md5(state=md5dig, count=num_bits_orig)
     md5dig_admin= h.update(admin_str)
     n_hash = h.hexdigest()
-    url_new = url_split1[0] + b'=' + bytes.fromhex(n_hash) + str0 + padding0 + admin_str
-    print(padding0)
-    print(url_new)
-    print(make_query('one', 'hunterythompson', url_new))
+    for (s in range(1, 65)):
+        padding0 = padding((len(str0)+s)*8)
+        url_new = url_split1[0] + b'=' + bytes.fromhex(n_hash) + str0 + padding0 + admin_str
+        print(padding0)
+        print(url_new)
+        try:
+            print(make_query('one', 'hunterythompson', url_new))
+            break
     return flag
 
 
