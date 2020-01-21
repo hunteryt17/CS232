@@ -106,8 +106,8 @@ def problem1(admin_str):
     for s in range(1, 65):
         padding0 = padding((len(str0)+s)*8)
         url_new = url_split1[0] + b'=' + bytes.fromhex(n_hash) + str0 + padding0 + admin_str
-        print(padding0)
-        print(url_new)
+        #print(padding0)
+        #print(url_new)
         try:
             print(make_query('one', 'hunterythompson', url_new))
             return make_query('one', 'hunterythompson', url_new)
