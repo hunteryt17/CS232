@@ -109,8 +109,7 @@ def problem1(admin_str):
         print(url_new)
         try:
             print(make_query('one', 'hunterythompson', url_new))
-            break
-    return make_query('one', 'hunterythompson', url_new)
+            return make_query('one', 'hunterythompson', url_new)
 
 
 ################################################################################
