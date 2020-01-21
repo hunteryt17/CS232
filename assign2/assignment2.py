@@ -110,6 +110,7 @@ def problem1(admin_str):
         if s == 34:
             print(padding0)
             print(url_new)
+            print(url_new.decode("utf-8"))
         try:
             print(make_query('one', 'hunterythompson', url_new))
             return make_query('one', 'hunterythompson', url_new)
