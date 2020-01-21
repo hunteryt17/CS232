@@ -89,13 +89,13 @@ def problem1(admin_str):
     #your code here
     url_orig = make_query('one', 'hunterythompson', '')
     print(url_orig)
-    url_split0 = url_orig.split('&')
-    url_split1= url_split0[0].split('=')
+    url_split0 = url_orig.split(b'&')
+    url_split1= url_split0[0].split(b'=')
     md5dig= url_split1[1]
     num_bits = len(md5dig) * 8
     num_blocks = num_bits // 128
     num_bits_orig = num_blocks * 512
-    str0= url_split0[1] + '&' + url_split0[2]
+    str0= url_split0[1] + b'&' + url_split0[2]
     print(str0)
 
     print(num_bits)
@@ -106,8 +106,10 @@ def problem1(admin_str):
 
     for s in range(1, 65):
         padding0 = padding((len(str0)+s)*8)
-        url_new = url_split1[0] + '=' + n_hash + str0 + padding0 + admin_str
+        url_new = url_split1[0] + b'=' + bytes.fromhex(n_hash) + str0 + padding0 + admin_str
         if s == 34:
+            print(bytes.fromhex(n_hash))
+            print(str0)
             print(padding0)
             print(url_new)
             #print(url_new.decode("utf-8"))
@@ -154,7 +156,7 @@ def problem5():
 # use this for testing by uncommenting the lines for problems you wish to test
 if __name__ == "__main__":
     #print("Problem 0 flag:", problem0())
-    print("Problem 1 flag:", problem1('&role=admin'))
+    print("Problem 1 flag:", problem1(b'&role=admin'))
     #print("Problem 2 flag:", problem2())
     #print("Problem 3 flag:", problem3())
     #print("Problem 4 flag:", problem4())
