@@ -96,6 +96,7 @@ def problem1(admin_str):
     num_blocks = num_bits // 128
     num_bits_orig = num_blocks * 512
     str0= url_split0[1] + b'&' + url_split0[2]
+    print(str0)
 
     print(num_bits)
     print(num_blocks)
