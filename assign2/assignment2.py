@@ -107,7 +107,7 @@ def problem1(admin_str):
 
     for s in range(1, 65):
         padding0 = padding((len(str0)+s)*8)
-        url_new = url_split1[0] + b'=' + bytes.fromhex(n_hash) +b'&'+ str0 + padding0 + admin_str
+        url_new = url_split1[0] + b'=' + n_hash +b'&'+ str0 + padding0 + admin_str
         if s == 34:
             print(bytes.fromhex(n_hash))
             print(str0)
