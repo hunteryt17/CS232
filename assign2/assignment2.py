@@ -89,8 +89,8 @@ def problem1(admin_str):
     #your code here
     url_orig = make_query('one', 'hunterythompson', '')
     print(url_orig)
-    url_split0 = url_orig.split(b'&')
-    url_split1= url_split0[0].split(b'=')
+    url_split0 = url_orig.split('&')
+    url_split1= url_split0[0].split('=')
     md5dig= url_split1[1]
     num_bits = len(md5dig) * 8
     num_blocks = num_bits // 128
@@ -154,7 +154,7 @@ def problem5():
 # use this for testing by uncommenting the lines for problems you wish to test
 if __name__ == "__main__":
     #print("Problem 0 flag:", problem0())
-    print("Problem 1 flag:", problem1(b'&role=admin'))
+    print("Problem 1 flag:", problem1('&role=admin'))
     #print("Problem 2 flag:", problem2())
     #print("Problem 3 flag:", problem3())
     #print("Problem 4 flag:", problem4())
