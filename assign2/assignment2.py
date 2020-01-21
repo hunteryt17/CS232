@@ -104,6 +104,8 @@ def problem1(admin_str):
     md5dig_admin= h.update(admin_str)
     n_hash = h.hexdigest()
     print(n_hash)
+    n_hashbytes = bytes.fromhex(n_hash)
+    print(n_hashbytes)
 
     for s in range(1, 65):
         padding0 = padding((len(str0)+s)*8)
