@@ -103,33 +103,24 @@ def problem1():
     url_split1= url_split0[0].split(b'=') #splits string to get md5
     md5dig= url_split1[1]
 
-    #num_bits = len(md5dig) * 8
-    #num_blocks = num_bits // 128
-        #num_bits_orig = num_blocks * 512
     str0= url_split0[1] + b'&' + url_split0[2] #creates string of uname & role
 
-    md5dig = bytes.fromhex(md5dig.decode('utf8'))
-    h = md5(state=md5dig, count=512)
-    md5dig_admin= h.update(admin_str)
+    md5dig = bytes.fromhex(md5dig.decode('utf8')) #convert to bytes to make state
+    h = md5(state=md5dig, count=512) #set state of md5 for future
+    md5dig_admin= h.update(admin_str) #make new md5 hash
     n_hash = h.hexdigest()
-#    print(n_hash)
+
     n_hashbytes = bytes(h.hexdigest(), 'utf-8')
-#    print(n_hashbytes)
-    list = []
+
 
     for s in range(1, 65):
-        padding0 = padding((len(str0)+s)*8)
+        padding0 = padding((len(str0)+s)*8) #make padding for string
         url_new = url_split1[0] + b'=' + n_hashbytes +b'&'+ str0 + padding0 + admin_str #build new url
-        
-        list.append(make_query('one', 'hunterythompson', url_new))
-            #print(url_new.decode("utf-8"))
+
         if (str(make_query('one', 'hunterythompson', url_new), 'utf-8') == 'Incorrect hash'):
             continue
         else:
-            #print(list)
-            #print(make_query('one', 'hunterythompson', url_new))
             return make_query('one', 'hunterythompson', url_new)
-    #print(list)
     return
 
 
@@ -141,13 +132,10 @@ def problem3():
     flag = ""
     #your code here
     c_text = make_query('three', 'hunterythompson', '')
-
-
     c_int = int(c_text, 0)
-    #print(c_int)
     nullbyte = modexp(256, e3, N3) #256 is 2^8 to shift left  by 8 bites (NULL byte)
-    c_new0 = nullbyte * c_int
-    c_new = c_new0 % N3
+    c_new0 = nullbyte * c_int #multiply 2 ciphers together
+    c_new = c_new0 % N3 #mod N3
     flag = make_query('three', 'hunterythompson', hex(c_new))
     return flag
 
@@ -161,57 +149,36 @@ def problem4():
     #your code here
     c_text = make_query('four', 'hunterythompson', '') #takes in ciphertext
     c_int = int(c_text, 0) #converts to int
-    getcontext().prec = k4
-    #msg_int = int(msg4_pract, 0)
-    #print(msg_int)
-    #c_int = modexp(msg_int, e4_pract, N4_pract)
-    #print("c_int is ", c_int)
+    getcontext().prec = k4 #set precision of decimals
     low = Decimal(0)
     upp = Decimal(N4)
-    upp_num = 1
+    upp_num = 1 #Multiply numerator by this number to get new upper/lower bound
     for s in range(1, k4 + 1):
-        #print("upp_num is", upp_num)
-        two_mult = 2**s
+        two_mult = 2**s #Multiple of 2 to check next bit
         two_add = modexp(two_mult, e4, N4)
-        #print(two_mod)
         c_new0 = c_int * two_add
-        two_mod = make_query('four', 'hunterythompson', hex(c_new0))
-        #two_mod = int(two_mod, 16)
-
-        #print(c_new0)
-        #c_new1 = c_new0 % N4_pract
-        #print(c_new1)
-        #c_new1 = c_new1 % 2
-        #print(c_new1)
-        if two_mod == b'\x00':
+        two_mod = make_query('four', 'hunterythompson', hex(c_new0)) #query to return 0 or 1
+        if two_mod == b'\x00': #if bit is 0, adjust upper bound
             upp = (Decimal(upp_num) * Decimal(N4))/ Decimal(2**s)
-            #print("New upper is ", upp)
             upp_num = (upp_num * 2) - 1
 
-        else:
+        else: #if bit is 1, adjust lower bound
             low = (Decimal(upp_num) * Decimal(N4))/ Decimal(2**s)
-            #print("New lower is ", low)
             upp_num = (upp_num * 2) + 1
 
-    #print(upp)
-    #print(low)
     upp_int = upp.to_integral_value()
     low_int = low.to_integral_value()
 
-    c_low = modexp(low_int, e4, N4)
-    c_upp = modexp(upp_int, e4, N4)
+    c_low = modexp(low_int, e4, N4) #calculate ciphertext of lower bound
+    c_upp = modexp(upp_int, e4, N4) #calculate ciphertex of upper bound
 
-    if c_int == c_low:
+    if c_int == c_low: #check to see if ciphertext = calculated lower cipher
         flag = low_int
-        print(hex(int(low_int)))
-        #print("yay!")
         return flag
-    elif c_int == c_upp:
+    elif c_int == c_upp: #check to see if ciphertext = calculated lower cipher
         flag = upp_int
-        #print("SpOoKy!")
         return flag
     else:
-        #print("better luck chick")
         return flag
 
 ################################################################################
@@ -223,7 +190,7 @@ def problem5():
     #your code here
     getcontext().prec = 2000
 
-    sha256 = b'9c29e443b37afa015fafc09aac96e19fbb58d7f183b68b6630ccfcadf17f8350'
+    sha256 = b'9c29e443b37afa015fafc09aac96e19fbb58d7f183b68b6630ccfcadf17f8350' #sha256 of cnet_id
     X_byte = b'0001ff00' + sha256
     f_byte1 = b'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
     f_byte0 = b'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
@@ -236,17 +203,7 @@ def problem5():
     X_int_fcrt_hgh = Decimal(X_large_int) #take cube root of smallest value in range
     X_int_fcrt_hgh = X_int_fcrt_hgh ** (Decimal(1)/Decimal(3))
     X_cbrt = (X_int_fcrt_hgh + X_int_fcrt_low) / Decimal(2) #take avg of two cube roots
-    X_cbrt = X_cbrt.to_integral_value() #+ Decimal(1) #add 1 to int val of cube root
-    X_cbrt_new = X_cbrt
-    #print(X_cbrt_new)
-    #print(X_cbrt_new - X_cbrt)
-    X_old = X_cbrt ** Decimal(3)
-    X_new = X_cbrt_new ** Decimal(3)
-    X_old_int = int(X_old)
-    X_int1 = int(X_new)
-    #print(hex(X_int1))
-    #print(hex(X_old_int))
-    #print(make_query('five', 'hunterythompson', hex(int(X_cbrt))))
+    X_cbrt = X_cbrt.to_integral_value() # Convert to integer value
 
     return make_query('five', 'hunterythompson', hex(int(X_cbrt)))
 

@@ -1,17 +1,30 @@
+1.
+In order to crack the code, I first split the url into segments to get the md5 hash of the original url. Once I had the hash I set the state of md5 to match it and I then updated the hash with the addition of my admin_str b'&role=admin'. Now I realized that what differed from the practice example is that the secret key length could vary, so I needed to check how much padding was added to the end of the url which could have been anywhere between 1 and 64. Thus, I used a for loop to go over all the different lengths the secret key could have been and then made a url from gluing the parts back together. Finally, I checked whether it would return the flag with each iteration until the flag was returned.
+
 2b.
 The collisions were generated in only 0.844 s (incredibly fast)
-The MD5 hashes of the two were both c087bfa09b844f668d45016d83705baf
-The SHA256 hash of hunterythompson-2b-1.bin was 644ca84e26f009ae5736f9d463a6d9fa9605f842fadd651d3b6497ab1b35dac1, while the SHA256 hash of hunterythompson-2b-2.bin was 118823d028e59e7f61720e63a5ee66b1981242ca160032a1b89e1773345f5cc9. Thus, they did not collide as expected. 
-The hex encoding of the files are 68756e7465727974686f6d70736f6e000000000000000000000000000000
+The MD5 hashes of the two were both 8133f1e0a26bbcf24c5cd7db6f1811db
+The SHA256 hash of hunterythompson-2b-1.bin was 5ec5a51f740d8823f6c337b961884141eb411c5db69fb7ef3013af1acd4fff15, while the SHA256 hash of hunterythompson-2b-2.bin was dced8993cd3b4e67916c226249e2c4a5a9b5b9f4884d0ed5648e7cee5d1d6705. Thus, they did not collide as expected. 
+The hex encoding of the files are 68756e7465727974686f6d70736f6e0a0000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000
-0000000002d94eefd5865bfad22032f6e3df284cef6986e005a1847d5c2a
-82aaf1431d0d00240ae5d87fd45a0b0cf242ebf1cbbe1a130168d6eda61e
-d4d8055076e4de77a245a4554f5b427afff64015db2b373fd6f59d07257a
-c11dd55b13c9d0307dae439196e2690973d3cf8fa12fb2d95beadbed7ee9
-98962006e6a34e73296c8e3e for 1 and 68756e7465727974686f6d70736f6e000000000000000000000000000000
+00000000f9dabd2f0af9606b35c4a848b1832d6308ac84fbe43655aa16ae
+3a9aa9b389fbf2f508eb3acddf5667285dfc1470656fedf6bd23e4292eb8
+32fd0b90ded6480a42d7427e2597b72c24ca60d318a4658939337e68d3e8
+144a6e1ba0cb4b9cc74130b6c48e764c839e989d6bb96ddfd342f609db95
+af4f6ffb161e38d6172b40b2 for 1 
+and 68756e7465727974686f6d70736f6e0a0000000000000000000000000000
 000000000000000000000000000000000000000000000000000000000000
-0000000002d94eefd5865bfad22032f6e3df284cef69866005a1847d5c2a
-82aaf1431d0d00240ae5d87fd45a0b0cf242eb71ccbe1a130168d6eda61e
-d4d805d076e4de77a245a4554f5b427afff64015db2b373fd6f59d87257a
-c11dd55b13c9d0307dae439196e2690973d3cf8fa12fb2595beadbed7ee9
-98962006e6a34ef3296c8e3e for 2
+00000000f9dabd2f0af9606b35c4a848b1832d6308ac847be43655aa16ae
+3a9aa9b389fbf2f508eb3acddf5667285dfc14f0656fedf6bd23e4292eb8
+32fd0b10ded6480a42d7427e2597b72c24ca60d318a4658939337ee8d3e8
+144a6e1ba0cb4b9cc74130b6c48e764c839e989d6bb96d5fd342f609db95
+af4f6ffb161e3856172b40b2 for 2
+2c.
+My program is written in python and it works by having the prefix be the beginning of a string variable and then running fastcoll to get two files that hash to the same thing. Now that I have two files that hash to the same thing, I looked for differences between the two files and notices that one file has an additional ' character. Thus, I counted the number of ' characters in each file and saw that one file had 2 while the other had 1, so I was able to use an if statement that checked the var as something that would distinguish between the two as my suffix. Then, I concatenated everything together and checked that they hashed to the same value in md5 as hoped for. The md5 hash of both are 4ca0ed19d4d784a5837896c197c47b9d.
+
+3. I generated the ciphertext by realizing that generating a NULL byte is equivalent to having left shifting the text by 8 bits. This can be done by multiplying the message by 2^8 or 256, and we have to raise this to the e3 power to be able to multiply it by the cipher message. Then, I took the mod N3 to make sure the new cipher was in range and got the flag. 
+
+4. In problem 4, I had to make sure to set the precision of the decimals because I intially ran into the difficulty that they were not precise enough to return my desired string. Then, I looped over values of s from 1 to 512 as the bit string had 2^512 bits and each iteration would do the equivalent of returning 1 of the bits. I followed a similar logic to problem 3 to create the new ciphertext to make_query with; however, I made sure to change what I multiplied it by each time 2^s to reflect the fact that the search was getting more precise with each iteration. One problem that I did encounter was how to figure out what the numerator would be each time, so I drew a little graph of possible numerators. This showed that the numerators would shift by 2 * old_num_const - 1 if we adjusted the upper bound and 2 * old_num_const + 1 if we adjusted the lower bound. After looping through this, the upper and lower bound are within a number of each other and I check whether they match the origial cipher text when raised to the e4 mod N4 and return the ciphertext.
+
+5. In problem 5, I intially constructed the byte string representing X with the malicious padding and the sha256 of my cnetid. Then, I appended a 440 0s to represent the minimum value we're looking for in the space and 440 fs to represent the max value. I converted these both to integers and took the cube root of both of them and averaged them together and made them an integer as this would return a cube root within the desired range of values. 
+
