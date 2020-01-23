@@ -222,6 +222,7 @@ def problem4():
 def problem5():
     flag = ""
     #your code here
+    getcontext().prec = 512
 
     sha256 = b'9c29e443b37afa015fafc09aac96e19fbb58d7f183b68b6630ccfcadf17f8350'
     X_byte = b'0001ff' + sha256
@@ -229,6 +230,12 @@ def problem5():
     X_byte_large = X_byte + f_byte1 + f_byte1
     X_int = int(X_byte, 16)
     X_large_int = int(X_byte_large, 16)
+    X_int_fcrt = Decimal(X_int**(1./3.)) #take cube root of smallest value in range
+    X_cbrt = X_int_fcrt.to_integral_value() + Decimal(1) #add 1 to int val of cube root
+    X_new = X_cbrt**3
+    X_int1 = int(X_new)
+    print(make_query('four', 'hunterythompson', hex(X_int1)))
+
     return flag
 
 
