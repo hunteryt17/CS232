@@ -231,7 +231,8 @@ def problem5():
     X_int = int(X_byte, 16)
     X_large_int = int(X_byte_large, 16)
     X_int_fcrt = Decimal(X_int**(1./3.)) #take cube root of smallest value in range
-    X_cbrt = X_int_fcrt.to_integral_value() + Decimal(1) #add 1 to int val of cube root
+    X_cbrt = X_int_fcrt.to_integral_value() + Decimal(3) #add 1 to int val of cube root
+    print(X_cbrt)
     X_new = X_cbrt**3
     X_int1 = int(X_new)
     print(make_query('five', 'hunterythompson', hex(X_int1)))
