@@ -235,6 +235,7 @@ def problem5():
     print(X_cbrt)
     X_new = X_cbrt**3
     X_int1 = int(X_new)
+    print(hex(X_int1))
     print(make_query('five', 'hunterythompson', hex(X_int1)))
 
     return flag
