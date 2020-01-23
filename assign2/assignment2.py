@@ -98,17 +98,17 @@ def problem1():
     #your code here
     admin_str = b'&role=admin'
     url_orig = make_query('one', 'hunterythompson', '')
-    print(url_orig)
+
     url_split0 = url_orig.split(b'&')
     url_split1= url_split0[0].split(b'=') #splits string to get md5
     md5dig= url_split1[1]
+
     #num_bits = len(md5dig) * 8
     #num_blocks = num_bits // 128
         #num_bits_orig = num_blocks * 512
     str0= url_split0[1] + b'&' + url_split0[2] #creates string of uname & role
-    print(str0)
-    print(md5dig)
 
+    md5dig = bytes.fromhex(md5dig.decode('utf8'))
     h = md5(state=md5dig, count=512)
     md5dig_admin= h.update(admin_str)
     n_hash = h.hexdigest()
@@ -120,20 +120,16 @@ def problem1():
     for s in range(1, 65):
         padding0 = padding((len(str0)+s)*8)
         url_new = url_split1[0] + b'=' + n_hashbytes +b'&'+ str0 + padding0 + admin_str #build new url
-        #if s == 34:
-        #    print(bytes.fromhex(n_hash))
-        #    print(str0)
-        #    print(padding0)
-        #    print(url_new)
+        
         list.append(make_query('one', 'hunterythompson', url_new))
             #print(url_new.decode("utf-8"))
         if (str(make_query('one', 'hunterythompson', url_new), 'utf-8') == 'Incorrect hash'):
             continue
         else:
-            print(list)
-            print(make_query('one', 'hunterythompson', url_new))
+            #print(list)
+            #print(make_query('one', 'hunterythompson', url_new))
             return make_query('one', 'hunterythompson', url_new)
-    print(list)
+    #print(list)
     return
 
 
@@ -145,7 +141,7 @@ def problem3():
     flag = ""
     #your code here
     c_text = make_query('three', 'hunterythompson', '')
-    print(c_text)
+
 
     c_int = int(c_text, 0)
     #print(c_int)
@@ -165,7 +161,7 @@ def problem4():
     #your code here
     c_text = make_query('four', 'hunterythompson', '') #takes in ciphertext
     c_int = int(c_text, 0) #converts to int
-    getcontext().prec = 512
+    getcontext().prec = k4
     #msg_int = int(msg4_pract, 0)
     #print(msg_int)
     #c_int = modexp(msg_int, e4_pract, N4_pract)
@@ -180,40 +176,43 @@ def problem4():
         #print(two_mod)
         c_new0 = c_int * two_add
         two_mod = make_query('four', 'hunterythompson', hex(c_new0))
+        #two_mod = int(two_mod, 16)
+
         #print(c_new0)
         #c_new1 = c_new0 % N4_pract
         #print(c_new1)
         #c_new1 = c_new1 % 2
         #print(c_new1)
-        if two_mod == 0:
-            upp = Decimal(upp_num) * Decimal(N4)/ Decimal(2**s)
+        if two_mod == b'\x00':
+            upp = (Decimal(upp_num) * Decimal(N4))/ Decimal(2**s)
             #print("New upper is ", upp)
             upp_num = (upp_num * 2) - 1
-            #print(s, "is 0")
+
         else:
-            low = Decimal(upp_num) * Decimal(N4)/ Decimal(2**s)
+            low = (Decimal(upp_num) * Decimal(N4))/ Decimal(2**s)
             #print("New lower is ", low)
             upp_num = (upp_num * 2) + 1
-            #print(s," is 1")
+
     #print(upp)
     #print(low)
     upp_int = upp.to_integral_value()
     low_int = low.to_integral_value()
-    print(upp_int)
-    print(low_int)
-    print("The difference bw low & upp is", (upp_int-low_int))
+
     c_low = modexp(low_int, e4, N4)
     c_upp = modexp(upp_int, e4, N4)
-    print(c_low)
-    print(c_upp)
-    print(c_int)
+
     if c_int == c_low:
-        print("yay!")
+        flag = low_int
+        print(hex(int(low_int)))
+        #print("yay!")
+        return flag
     elif c_int == c_upp:
-        print("SpOoKy!")
+        flag = upp_int
+        #print("SpOoKy!")
+        return flag
     else:
-        print("better luck chick")
-    return flag
+        #print("better luck chick")
+        return flag
 
 ################################################################################
 # PROBLEM 5 SOLUTION
@@ -227,25 +226,29 @@ def problem5():
     sha256 = b'9c29e443b37afa015fafc09aac96e19fbb58d7f183b68b6630ccfcadf17f8350'
     X_byte = b'0001ff00' + sha256
     f_byte1 = b'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+    f_byte0 = b'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+    X_byte_small = X_byte + f_byte0 + f_byte0
     X_byte_large = X_byte + f_byte1 + f_byte1
-    X_int = int(X_byte, 16)
+    X_int = int(X_byte_small, 16)
     X_large_int = int(X_byte_large, 16)
-    X_int_fcrt = Decimal(X_int) #take cube root of smallest value in range
-    X_int_fcrt = X_int_fcrt ** (Decimal(1)/Decimal(3))
-    X_cbrt = X_int_fcrt.to_integral_value() #+ Decimal(1) #add 1 to int val of cube root
-    X_cbrt_new = X_cbrt + 1
-    print(X_cbrt)
-    print(X_cbrt_new)
-    print(X_cbrt_new - X_cbrt)
+    X_int_fcrt_low = Decimal(X_int) #take cube root of smallest value in range
+    X_int_fcrt_low = X_int_fcrt_low ** (Decimal(1)/Decimal(3))
+    X_int_fcrt_hgh = Decimal(X_large_int) #take cube root of smallest value in range
+    X_int_fcrt_hgh = X_int_fcrt_hgh ** (Decimal(1)/Decimal(3))
+    X_cbrt = (X_int_fcrt_hgh + X_int_fcrt_low) / Decimal(2) #take avg of two cube roots
+    X_cbrt = X_cbrt.to_integral_value() #+ Decimal(1) #add 1 to int val of cube root
+    X_cbrt_new = X_cbrt
+    #print(X_cbrt_new)
+    #print(X_cbrt_new - X_cbrt)
     X_old = X_cbrt ** Decimal(3)
     X_new = X_cbrt_new ** Decimal(3)
     X_old_int = int(X_old)
     X_int1 = int(X_new)
-    print(hex(X_int1))
-    print(hex(X_old_int))
-    print(make_query('five', 'hunterythompson', hex(X_int1)))
+    #print(hex(X_int1))
+    #print(hex(X_old_int))
+    #print(make_query('five', 'hunterythompson', hex(int(X_cbrt))))
 
-    return flag
+    return make_query('five', 'hunterythompson', hex(int(X_cbrt)))
 
 
 
@@ -253,9 +256,9 @@ def problem5():
 # use this for testing by uncommenting the lines for problems you wish to test
 if __name__ == "__main__":
     #print("Problem 0 flag:", problem0())
-    #print("Problem 1 flag:", problem1())
+    print("Problem 1 flag:", problem1())
     #print("Problem 2 flag:", problem2())
-    #print("Problem 3 flag:", problem3())
-    #print("Problem 4 flag:", problem4())
+    print("Problem 3 flag:", problem3())
+    print("Problem 4 flag:", problem4())
     print("Problem 5 flag:", problem5())
     exit()

@@ -1,0 +1,10 @@
+"""
+sum = 0
+for s in var:
+	if s == "'":
+		sum += 1
+
+if sum == 2:
+	print("my name is hunterythompson, and i am good")
+else:
+	print("my name is hunterythompson, and i am evil")		
