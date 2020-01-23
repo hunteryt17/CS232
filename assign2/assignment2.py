@@ -236,9 +236,12 @@ def problem5():
     print(X_cbrt)
     print(X_cbrt_new)
     print(X_cbrt_new - X_cbrt)
-    X_new = X_cbrt_new**3
+    X_old = X_cbrt ** 3
+    X_new = X_cbrt_new ** 3
+    X_old_int = int(X_old)
     X_int1 = int(X_new)
     print(hex(X_int1))
+    print(hex(X_old_int))
     print(make_query('five', 'hunterythompson', hex(X_int1)))
 
     return flag
