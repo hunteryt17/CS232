@@ -1,6 +1,7 @@
 import urllib.request
 import base64
 from pymd5 import md5, padding
+from decimal import *
 
 ################################################################################
 #
@@ -50,6 +51,14 @@ k4 = 512
 # Modulus N3 is 512 bits long, too short for real security
 N4= 0x00c7d11981bf2838ed5ae602cecc4cffcf141537f9ec6e12b2fcaae43dedbf9845049066cc8720c6685d100957c07e4f5f97b2b8e66d1a3bcc32ecf1e0fee55e6f
 
+#msg4_pract = b'0x8d7ac6d40144d5d1727250791026fa35aad91dc'
+msg4_pract = b'0xac3'
+#k4= 4
+#e4_pract = 3
+#N4_pract = 0xb
+e4_pract = 65537
+N4_pract = 0x00c1cc9b93cb4694f48954b97545a63a7b968c85525049f1c5e70acb31bc23d72978cf94bbb9225772295ee7626a448bef29a04d0822fe4001d714e8ce6c86953d
+
 e5 = 3
 k5 = 2048
 # Modulus N4 is 2048 bits long
@@ -84,44 +93,47 @@ def modexp(base, exp, modulus):
 # PROBLEM 1 SOLUTION
 ################################################################################
 
-def problem1(admin_str):
+def problem1():
     flag = ""
     #your code here
+    admin_str = b'&role=admin'
     url_orig = make_query('one', 'hunterythompson', '')
     print(url_orig)
     url_split0 = url_orig.split(b'&')
-    url_split1= url_split0[0].split(b'=')
+    url_split1= url_split0[0].split(b'=') #splits string to get md5
     md5dig= url_split1[1]
-    num_bits = len(md5dig) * 8
-    num_blocks = num_bits // 128
-    num_bits_orig = num_blocks * 512
-    str0= url_split0[1] + b'&' + url_split0[2]
+    #num_bits = len(md5dig) * 8
+    #num_blocks = num_bits // 128
+        #num_bits_orig = num_blocks * 512
+    str0= url_split0[1] + b'&' + url_split0[2] #creates string of uname & role
     print(str0)
+    print(md5dig)
 
-    print(num_bits)
-    print(num_blocks)
     h = md5(state=md5dig, count=512)
     md5dig_admin= h.update(admin_str)
     n_hash = h.hexdigest()
-    print(n_hash)
+#    print(n_hash)
     n_hashbytes = bytes(h.hexdigest(), 'utf-8')
-    print(n_hashbytes)
+#    print(n_hashbytes)
+    list = []
 
     for s in range(1, 65):
         padding0 = padding((len(str0)+s)*8)
-        url_new = url_split1[0] + b'=' + n_hashbytes +b'&'+ str0 + padding0 + admin_str
-        if s == 34:
-            print(bytes.fromhex(n_hash))
-            print(str0)
-            print(padding0)
-            print(url_new)
+        url_new = url_split1[0] + b'=' + n_hashbytes +b'&'+ str0 + padding0 + admin_str #build new url
+        #if s == 34:
+        #    print(bytes.fromhex(n_hash))
+        #    print(str0)
+        #    print(padding0)
+        #    print(url_new)
+        list.append(make_query('one', 'hunterythompson', url_new))
             #print(url_new.decode("utf-8"))
         if (str(make_query('one', 'hunterythompson', url_new), 'utf-8') == 'Incorrect hash'):
             continue
         else:
+            print(list)
             print(make_query('one', 'hunterythompson', url_new))
             return make_query('one', 'hunterythompson', url_new)
-
+    print(list)
     return
 
 
@@ -132,6 +144,15 @@ def problem1(admin_str):
 def problem3():
     flag = ""
     #your code here
+    c_text = make_query('three', 'hunterythompson', '')
+    print(c_text)
+
+    c_int = int(c_text, 0)
+    #print(c_int)
+    nullbyte = modexp(256, e3, N3) #256 is 2^8 to shift left  by 8 bites (NULL byte)
+    c_new0 = nullbyte * c_int
+    c_new = c_new0 % N3
+    flag = make_query('three', 'hunterythompson', hex(c_new))
     return flag
 
 
@@ -142,6 +163,56 @@ def problem3():
 def problem4():
     flag = ""
     #your code here
+    c_text = make_query('four', 'hunterythompson', '') #takes in ciphertext
+    c_int = int(c_text, 0) #converts to int
+    getcontext().prec = 512
+    #msg_int = int(msg4_pract, 0)
+    #print(msg_int)
+    #c_int = modexp(msg_int, e4_pract, N4_pract)
+    #print("c_int is ", c_int)
+    low = Decimal(0)
+    upp = Decimal(N4)
+    upp_num = 1
+    for s in range(1, k4 + 1):
+        #print("upp_num is", upp_num)
+        two_mult = 2**s
+        two_add = modexp(two_mult, e4, N4)
+        #print(two_mod)
+        c_new0 = c_int * two_add
+        two_mod = make_query('four', 'hunterythompson', hex(c_new0))
+        #print(c_new0)
+        #c_new1 = c_new0 % N4_pract
+        #print(c_new1)
+        #c_new1 = c_new1 % 2
+        #print(c_new1)
+        if two_mod == 0:
+            upp = Decimal(upp_num) * Decimal(N4)/ Decimal(2**s)
+            #print("New upper is ", upp)
+            upp_num = (upp_num * 2) - 1
+            #print(s, "is 0")
+        else:
+            low = Decimal(upp_num) * Decimal(N4)/ Decimal(2**s)
+            #print("New lower is ", low)
+            upp_num = (upp_num * 2) + 1
+            #print(s," is 1")
+    #print(upp)
+    #print(low)
+    upp_int = upp.to_integral_value()
+    low_int = low.to_integral_value()
+    print(upp_int)
+    print(low_int)
+    print("The difference bw low & upp is", (upp_int-low_int))
+    c_low = modexp(low_int, e4, N4)
+    c_upp = modexp(upp_int, e4, N4)
+    print(c_low)
+    print(c_upp)
+    print(c_int)
+    if c_int == c_low:
+        print("yay!")
+    elif c_int == c_upp:
+        print("SpOoKy!")
+    else:
+        print("better luck chick")
     return flag
 
 ################################################################################
@@ -151,6 +222,13 @@ def problem4():
 def problem5():
     flag = ""
     #your code here
+
+    sha256 = b'9c29e443b37afa015fafc09aac96e19fbb58d7f183b68b6630ccfcadf17f8350'
+    X_byte = b'0001ff' + sha256
+    f_byte1 = b'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+    X_byte_large = X_byte + f_byte1 + f_byte1
+    X_int = int(X_byte, 16)
+    X_large_int = int(X_byte_large, 16)
     return flag
 
 
@@ -159,9 +237,9 @@ def problem5():
 # use this for testing by uncommenting the lines for problems you wish to test
 if __name__ == "__main__":
     #print("Problem 0 flag:", problem0())
-    print("Problem 1 flag:", problem1(b'&role=admin'))
+    #print("Problem 1 flag:", problem1())
     #print("Problem 2 flag:", problem2())
     #print("Problem 3 flag:", problem3())
     #print("Problem 4 flag:", problem4())
-    #print("Problem 5 flag:", problem5())
+    print("Problem 5 flag:", problem5())
     exit()
