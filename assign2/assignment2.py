@@ -234,7 +234,7 @@ def problem5():
     X_cbrt = X_int_fcrt.to_integral_value() + Decimal(1) #add 1 to int val of cube root
     X_new = X_cbrt**3
     X_int1 = int(X_new)
-    print(make_query('four', 'hunterythompson', hex(X_int1)))
+    print(make_query('five', 'hunterythompson', hex(X_int1)))
 
     return flag
 
